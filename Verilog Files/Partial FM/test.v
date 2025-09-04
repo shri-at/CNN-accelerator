@@ -4,9 +4,6 @@
 // Works for square matrices, rectangular matrices should be padded
 // Fixed layer depth of 3
 // Q1.15 format is used  
-// log
-// opIK are widened to 32 bits -> shifting is done when flattening is carried out -> partial results also 32 bits
-// temporary registers are required to hold values
 
 module ProducePartialFM(clk, rst, ipf, K1f, K2f, K3f, IK1, IK2, IK3, resting);
     input clk,
@@ -86,7 +83,6 @@ module ProducePartialFM(clk, rst, ipf, K1f, K2f, K3f, IK1, IK2, IK3, resting);
     reg signed [19 : 0] partial_result3;
     reg [IK_index_bit_width - 1 : 0] IK_index;
    
-    // x, y are variables that take care of row shifting once the right edge of ip is reached
     reg [5 : 0] x, // giving 5 bits so theres sufficient space for increments
                 y;
     integer m, n, r, c, p, q, a, b, d, e;
