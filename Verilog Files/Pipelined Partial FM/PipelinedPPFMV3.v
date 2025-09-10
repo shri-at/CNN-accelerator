@@ -135,7 +135,7 @@ module ProducePartialFM #(
                     for(j = 0; j < kernel_size - 1; j = j+1)
                         ip_subset[i][j] <= ip_subset[i][j + 1];
                 for(i = 0; i < kernel_size; i = i + 1)
-                    ip_subset[i][kernel_size - 1] = ip[i + x][y + kernel_size];
+                    ip_subset[i][kernel_size - 1] <= ip[i + x][y + kernel_size];
                     
                 if(y < op_size-2)
                 begin
