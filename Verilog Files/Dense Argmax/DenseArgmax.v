@@ -21,7 +21,7 @@ module dense #(
     input  [16*m*n-1 : 0] weightsf,
     input  [16*m*n-1 : 0] biasesf,
     input  [16*m-1 : 0]   x,
-    output reg [n-1:0]    y,           // MOD: one-hot vector instead of 16-bit outputs
+    output reg [n-1:0]    y,           
     output reg            resting
 );
 
@@ -47,7 +47,7 @@ module dense #(
 
     integer i, j; // loop indices
 
-    // --- stage 0 --- weight multiplication (UNCHANGED)
+    // --- stage 0 --- weight multiplication 
     reg stage0_valid;
     reg signed [31 : 0] mult_res [0 : sets-1][0 : m-1];
     reg [7 : 0] iter_countw;
@@ -217,7 +217,6 @@ module dense #(
         begin
             if(stage4_valid)
             begin
-                // find local max within current batch (blocking updates)
                 local_max_val = clamped[0];
                 local_max_idx = 8'd0;
                 for(i = 1; i < sets; i = i + 1)
@@ -232,7 +231,6 @@ module dense #(
                     end
                 end
 
-                // compare with global max (non-blocking update to pipeline regs)
                 if(local_max_val > global_max_val)
                 begin
                     global_max_val = local_max_val;
@@ -242,13 +240,13 @@ module dense #(
                 // increment batch index
                 batch_idx = batch_idx + 1;
 
-                // if final batch done, set one-hot output and resting
+                // one hot encoding
                 if(batch_idx == total_number_of_iterations - 1)
                 begin
                     for(i = 0; i < n; i = i + 1)
                         y[i] = 1'b0;
                     if(global_max_idx < n)
-                        y[global_max_idx] <= 1'b1;   // MOD: final one-hot
+                        y[global_max_idx] = 1'b1;   
                     resting = 1'b1;
                 end
                 else
